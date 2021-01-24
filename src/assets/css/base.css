@@ -1,0 +1,10 @@
+li{
+    list-style: none;
+}
+body{background: #F8F8F8}
+.van-grid-item__content--center{ background:rgba(0,0,0,0)}
+.bg-card{
+    border-radius: 10px;
+    background: white;
+    margin: 0 18px 18px 18px;
+}
