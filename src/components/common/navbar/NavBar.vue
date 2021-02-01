@@ -25,13 +25,16 @@ export default {
 }
 .left,
 .right {
-  width: 60px;
-  height: 44px;
+    width: 60px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center
 }
 .center {
-  flex: 1;
-  text-align: center;
-
+  flex: 1;    height: 44px;
+display: flex;
+  align-items: center;
 }
 
 </style>

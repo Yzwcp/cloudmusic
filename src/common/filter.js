@@ -51,7 +51,7 @@ export function addChineseUnit(number, decimalDigit) {
 
 
     var integer = Math.floor(number);
-    console.log(integer);
+    // console.log(integer);
     // var digit = me.getDigit(integer);
 
     var digit = getDigit(integer);

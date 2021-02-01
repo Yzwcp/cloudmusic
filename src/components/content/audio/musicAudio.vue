@@ -1,16 +1,25 @@
 <template>
-  <div class="audios">
-    <audio @ended="ended" autoplay  @timeupdate="timeupdate" @canplay="canplay" :src="getStoreMusicInfo.musicUrl" ref="musicAudio"></audio>
-    <li>
+  <div :class="{audios:true,bottom:isshow=='/' || isshow == '/found'|| isshow == '/cloudVillage'|| isshow == '/boke'}"
+    v-if="isShow"
+  >
+    <audio
+        :src="nowSong.url"
+        ref="musicAudio"
+        @canplay="_canplay"
+        @timeupdate="_timeupdate"
+        @ended="_ended"
+        autoplay
+        @playing="_playing"
+    ></audio>
+    <li @click="goLrc">
       <div class="hotimg">
-        <img :src="getStoreMusicInfo.picUrl" alt="">
+        <img :src="nowSong.picUrl" alt="">
       </div>
-      <div class="two">
-          {{getStoreMusicInfo.musicTitle}} <span class="author">-{{getStoreMusicInfo.author}}</span>  </div>
+      <div class="two">{{nowSong.name}}<span class="author"><span class="line">-</span>{{nowSong.author}}</span>  </div>
       <div class="four">
         <van-circle stroke-width="45"  class="circle" v-model="currentRate" :rate="0"  color="black" layer-color="#A9A9A9"  size="24px"   />
-        <van-icon v-show="!isShow" @click="playbtn" class="play" name="play"  size="14px"/>
-        <van-icon  v-show="isShow" @click="stopbtn" class="pause" name="pause" size="14px" />
+        <van-icon v-if="!isPlay" @click.stop="btn" class="play" name="play"  size="14px"/>
+        <van-icon v-if="isPlay"  @click.stop="btn" class="pause" name="pause" size="14px" />
         <van-icon  name="bars" size="22px"/>
       </div>
     </li>
@@ -19,69 +28,97 @@
 
 <script>
 // import {getMusicUrlAPI} from "@/network/home";
-import {mapGetters,mapMutations} from 'vuex'
+import {mapState,mapMutations,mapGetters} from 'vuex'
+import {deepClone} from "@/common/deepClone";
+import {getLyricAPI, getMusicUrlAPI,} from "@/network/home";
 
 export default {
   name: "audios",
   data(){
     return{
       currentRate:0,
-      //获取歌曲id
-      musicUrlitemId:{},
-      musicUrl:'',
-      isShow:true,
     }
   },
   created() {
-    this.$bus.$on('setMusicUrl',(res)=>{
-      this.musicUrlitemId= res.id
-    })
 
-    //监听歌曲点击事件，点击歌曲为播放
-    this.$bus.$on('musicisplay',(()=>{
-      this.isShow =  true
-    }))
   },
   methods:{
-    ...mapMutations(['setPlay']),
-    // 开始播放
-    playbtn(){
-      this.isShow = ! this.isShow
-      this.play()
+    ...mapMutations(['setNowSong','nowMusicList','setIsplay','setAudioDuration','setAudioCurrentTime']),
+    btn(){
       //修改播放状态
-      this.$store.commit('setShow',true)
+      this.setIsplay(!this.isPlay)
+      if (!this.isPlay) return  this.$refs.musicAudio.pause()
+      this.$refs.musicAudio.play()
     },
-    //暂停播放
-    stopbtn(){
-      this.isShow = ! this.isShow
-      //修改播放状态
-       this.stop()
+    _canplay(){
     },
-    //当浏览器可以开始播放该音视频时产生该事件
-    canplay(){
-      this.currentRate = this.$refs.musicAudio.currentTime
-      this.play()
+    _timeupdate(){
+        this.setAudioCurrentTime(this.$refs.musicAudio.currentTime)
+      console.info('start:' + this.$refs.musicAudio.buffered.start(0) + ',end:' + this.$refs.musicAudio.buffered.end(0));
+    },
+    _ended(){
+      //自动播放下一首
+      this.autoNext()
+    },
+    //自动下一首
+    async autoNext(){
+      var i = this.nowSong.index
+      i = i + 1
+      if(i>this.setlengh-1){
+        i=0
+      }
+      //在vux查找当前点击音乐
+      var obj ={}
+      this.$store.state.nowMusicList.some((item)=>{
+        if (item.index  == i)  {
+          obj =deepClone( item)
+        }
+      })
+      //根据当前音乐 的id查找音乐url
+      const {data:songurl} = await getMusicUrlAPI(obj.id)
+      if(songurl.code!=200) return  this.$toast('没有找到歌曲')
+      obj.url = songurl.data[0].url
+      const {data:lrcurl} = await getLyricAPI(obj.id)
+      if(lrcurl.code!=200) return  this.$toast('没有找到歌词')
+      obj.lrc = lrcurl.lrc.lyric
+      Promise.all([songurl,lrcurl]).then(()=>{
+        //发送当前点击音乐信息到vux
+        this.setNowSong(obj)
+
+      })
 
     },
-    //timeupdate  当前播放位置发生改变时产生该事件
-    timeupdate(){
-      this.currentRate = (this.$refs.musicAudio.currentTime / this.$refs.musicAudio.duration)*100
+    goLrc(){
+        this.$router.push('/musiclrc')
     },
-    //播放结束btn
-    ended(){
-      //重新加载音乐源
-      this.$refs.musicAudio.load()
-    },
-    //播放逻辑
-    play(){
-        this.$refs.musicAudio.play()},
-    //暂停
-    stop(){
-      this.$refs.musicAudio.pause()
+    _playing(){
+      //初始化当前播放时间
+      this.setAudioCurrentTime(this.$refs.musicAudio.currentTime)
+      this.setAudioDuration(this.$refs.musicAudio.duration)
     }
   },
   computed:{
-    ...mapGetters(['getStoreMusicInfo'])
+    ...mapState(['isPlay','isShow','nowSong','audioInfo_NowTime']),
+    ...mapGetters(['setPrecent','setlengh']),
+    isshow(){
+     return this.$route.path
+    }
+
+  },
+  watch:{
+    setPrecent(){
+      this.currentRate = this.setPrecent
+
+    },
+    isPlay(){
+      this.$nextTick(()=>{
+        if (!this.isPlay) return  this.$refs.musicAudio.pause()
+        this.$refs.musicAudio.play()
+      })
+    },
+    audioInfo_NowTime(){
+        this.$refs.musicAudio.currentTime=this.audioInfo_NowTime
+    }
   },
 }
 </script>
@@ -96,13 +133,13 @@ export default {
   padding:0 18px 10px 18px;
 }
 .audios{
-  position: fixed;
-  bottom: 0;
+  position: sticky;
+  bottom: 0px;
   background: white;
   width: 100%;
 
 }
-
+.line{margin: 0 5px}
 .audios hotimg {
   padding-left:18px;
 }
@@ -122,8 +159,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.van-icon van-icon-circle{
-}
+
 .play,.pause{
   position: absolute;
   right: 64px;
@@ -137,5 +173,8 @@ export default {
   font-size: 12px;
   color:#A9A9A9 ;
 
+}
+.bottom{
+  bottom: 50px;
 }
 </style>

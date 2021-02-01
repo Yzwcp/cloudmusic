@@ -28,8 +28,8 @@ export default {
     }
   },
   created() {
-    this.getUserObj()
-    this.getPlayList()
+     if (window.localStorage.getItem('token')) this.getUserObj()
+
   },
   methods: {
     //获取用户账号信息
@@ -37,18 +37,17 @@ export default {
       userObjAPI().then(res=>{
         if (res.data.code!==200) return this.$toast('获取用户数据失败')
         this.userObj = res.data.profile
-      })
-    },
-    //获取用户收藏专栏
-    getPlayList(){
-      getPlayListAPI(4049696538).then(res=>{
-        if(res.data.code!==200) return this.$toast('获取收藏列表失败')
-        res.data.playlist.shift()
-        this.playList=res.data.playlist
+      }).finally(()=>{
+        //获取用户收藏专栏
+        getPlayListAPI(this.userObj.userId).then(res=>{
+          if(res.data.code!==200) return this.$toast('获取收藏列表失败')
+          res.data.playlist.shift()
+          this.playList=res.data.playlist
+        })
       })
     },
 
-  }
+  },
 }
 </script>
 <style scoped>

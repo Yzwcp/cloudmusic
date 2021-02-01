@@ -6,11 +6,13 @@ Vue.use(VueRouter)
 
 const routes = [
     { path: '/',name: 'Home',component: Home},
-    {path: '/login', component:() => import('components/content/LoginProfile')},
+    {path: '/login', component:() => import('components/content/login/LoginProfile')},
     {path: '/found', component:() => import('views/found/Found')},
     {path: '/cloudVillage', component:() => import('views/cloudVillage/cloudVillage')},
-    {path: '/video', component:() => import('views/video/video')},
+    {path: '/boke', component:() => import('views/video/boke')},
     {path: '/singlist/:id', component:() => import('components/content/singList/singDetail')},
+    {path: '/musiclrc', component:() => import('components/content/audio/musicLrc')},
+    {path: '/search', component:() => import('components/content/search/SearchIpt')},
 ]
 
 const router = new VueRouter({

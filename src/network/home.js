@@ -5,6 +5,16 @@ export function  getLoginListAPI(phone,password){
         params:{phone,password}
     })
 }
+export function  isLoginApi(){
+    return request({
+        url:'/login/status',
+    })
+}
+export function  logoutAPI(){
+    return request({
+        url:'/logout',
+    })
+}
 //用户账号信息 头像等
 export function userObjAPI(){
     return request({
@@ -18,7 +28,7 @@ export  function getPlayListAPI(userId){
         params:{uid:userId}
     })
 }
-//获取用户歌单详情音乐
+//获取用户歌单详情音乐20首
 export  function getDetailAPI(id){
     return request({
         url:'/playlist/detail',
@@ -39,3 +49,38 @@ export  function getMusicUrlAPI(id){
         params:{id:id}
     })
 }
+//获取用户歌单详情音乐全部
+export  function getAllDetailAPI(ids){
+    return request({
+        url:'/song/detail',
+        params:{ids:ids}
+    })
+}
+//判断音乐是否可用
+export  function isCheckAPI(id){
+    return request({
+        url:'/check/music',
+        params:{id:id}
+    })
+}
+//获取歌词
+export  function getLyricAPI(id){
+    return request({
+        url:'/lyric',
+        params:{id:id}
+    })
+}
+export class SingInfo{
+    constructor(singInfo,index,listid) {
+        this.index = index
+        this.listId = listid
+        this.id = singInfo.id
+        this.name = singInfo.name
+        this.author = singInfo.ar[0].name
+        this.authorCDs=singInfo.al.name
+        this.url=''
+        this.picUrl=singInfo.al.picUrl
+    }
+}
+
+

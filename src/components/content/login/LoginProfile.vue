@@ -61,7 +61,7 @@ name: "LoginProfile",
           return this.$toast('账号错误')
         }else {
           this.profile = res.data
-          window.sessionStorage.setItem('token',res.data.token)
+          window.localStorage.setItem('token',res.data.token)
           this.$router.replace('/')
           this.$bus.$emit('setProfile',res.data)
         }

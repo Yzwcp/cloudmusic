@@ -22,7 +22,7 @@
     <div class="cvg">
       <div class="bg-card">
         <div class="bg-card-top">
-          <span class="addplaylist" @click="aaa">收藏的歌单({{playList.length}})</span>
+          <span class="addplaylist" @click="aaa">收藏的歌单 <span v-if="playList.length">({{ playList.length }}个)</span> </span>
           <van-icon class="more" name="ellipsis" />
         </div>
         <div class="bg-card-bottom2">
@@ -64,16 +64,16 @@ name: "PlayList",
       this.currentIndex=i
     },
     playListBtn(item){
-
-      console.log('点击了')
       this.playListItem= item
+      window.localStorage.setItem('item',JSON.stringify(item))
       this.$router.replace(`singlist/${item.id}`)
+      // this.$bus.$emit('setItem',this.playListItem)
     },
     aaa(){
     }
   },
-  beforeDestroy() {
-      this.$bus.$emit('getItem',this.playListItem)
+  deactivated() {
+    this.$bus.$emit('setItem',this.playListItem)
   }
 }
 </script>
@@ -90,7 +90,7 @@ name: "PlayList",
 .bg-card-top{
   color: #A9A9A9; padding: 0 18px; margin: 0px 0; line-height: 50px; height: 50px;display: flex;justify-content: center;align-items: center}
 .add,.more{margin: 0 5px 0 10px ;}
-.addplaylist{flex: 1}
+.addplaylist{flex: 1 ;font-size: 10px}
 .square{
   display: flex;
   justify-content: center;
@@ -130,7 +130,7 @@ li{
 .title{
   line-height: 18px;
   width: 245px;
-  font-size: 16px;
+  font-size: 14px;
   color: black;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -138,5 +138,6 @@ li{
 }
 .small-title{
   line-height: 0;
+  font-size: 10px;
 }
 </style>

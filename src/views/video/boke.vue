@@ -1,12 +1,12 @@
 <template>
   <div>
-    video
+    bokeaa
   </div>
 </template>
 
 <script>
 export default {
-  name: "video",
+  name: "boke",
   components:{
   }
 }

@@ -1,23 +1,19 @@
 <template>
   <div class="navbar">
-    <nav-bar>
-      <div class="left" slot="left"><van-icon color="black" size="24px" name="wap-nav" /></div>
-      <div class="center" slot="center">
-        <ul>
-          <li @click="NavBtn(i)" :class="{default:true,active: currentIndex==i}" v-for="(item,i) in navBarTitle" :key="i">{{item}}</li>
-        </ul>
-      </div>
-      <div class="right" slot="right"><van-icon size="24px" name="search" /></div>
-    </nav-bar>
+    <van-tabbar route placeholder  >
+      <van-tabbar-item replace  to="/found" icon="home-o">发现</van-tabbar-item>
+      <van-tabbar-item replace   to="/boke" icon="search">播客</van-tabbar-item>
+      <van-tabbar-item replace   to="/" icon="friends-o">我的</van-tabbar-item>
+      <van-tabbar-item replace   to='/cloudVillage' icon="setting-o">云村</van-tabbar-item>
+    </van-tabbar>
   </div>
 </template>
 
 <script>
-import NavBar from "@/components/common/navbar/NavBar";
+// import NavBar from "@/components/common/navbar/NavBar";
 export default {
   name: 'Home',
   components: {
-    NavBar
   },
   data(){
     return{
@@ -47,6 +43,9 @@ export default {
 <style scoped>
 .navbar{
   background: white;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
 }
 .navbar ul {
   display: flex;

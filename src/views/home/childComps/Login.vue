@@ -22,7 +22,12 @@
 export default {
 name: "Login",
   props:{
-    userObj:{}
+    userObj:{
+      type:Object,
+      default(){
+        return{}
+      }
+    }
   },
   methods:{
     goLogin(){

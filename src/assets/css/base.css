@@ -8,3 +8,6 @@ body{background: #F8F8F8}
     background: white;
     margin: 0 18px 18px 18px;
 }
+.van-cell-group{
+    border-radius:30px ;
+}
