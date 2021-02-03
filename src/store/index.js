@@ -6,7 +6,9 @@ const store = new Vuex.Store({
     state:{
         isPlay:false,//播放状态 默认false
         nowMusicList:[],//当前歌单歌曲列表,
-        nowSong:{},//当前播放歌曲
+        nowSong:{
+           lrc:'awdwadw'
+        },//当前播放歌曲
         nowClickId:null, //当前点击的歌曲id
         isShow:false,// 显示音乐播放器
         //播放器信息
@@ -14,6 +16,13 @@ const store = new Vuex.Store({
         audioInfo_currentTime:{},
         //滑动播放条
         audioInfo_NowTime:{},
+        //歌词定位
+        songPosition:0,
+
+        //歌词时间素组
+        songTimeArr:[],
+        //歌词素组
+        songLrclist:[]
    },
     mutations:{
         //获取歌单列表
@@ -41,6 +50,16 @@ const store = new Vuex.Store({
         },
         setAudioInfo_NowTime(state,playload){
             state.audioInfo_NowTime = playload
+        },
+        //获取歌词定位
+        setSongPosition(state,playload){
+            state.songPosition = playload
+        },
+        setsongTimeArr(state,playload){
+            state.songTimeArr =playload
+        },
+        setSongLrclist(state,loadplay){
+            state.songLrclist =loadplay
         }
    },
     getters:{
@@ -50,7 +69,23 @@ const store = new Vuex.Store({
        },
        setlengh(state){
           return  state.nowMusicList.length
-       }
+       },
+       setlrc(state){
+
+         let str =  state.nowSong.lrc.replace( /\n/g,'<br/>')
+
+         return str.replace(/\[(.+?)\]/g,'')
+
+
+         // str2.replace(/\[(.+?)\]/g,'')
+       },
+        setnowsonglrc(state){
+           return state.nowSong.lrc
+        }
+
+    },
+    actions:{
+
     }
 
 })

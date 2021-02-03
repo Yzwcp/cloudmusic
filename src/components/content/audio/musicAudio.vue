@@ -53,8 +53,11 @@ export default {
     _canplay(){
     },
     _timeupdate(){
-        this.setAudioCurrentTime(this.$refs.musicAudio.currentTime)
-      console.info('start:' + this.$refs.musicAudio.buffered.start(0) + ',end:' + this.$refs.musicAudio.buffered.end(0));
+
+      this.$store.state.audioInfo_currentTime = this.$refs.musicAudio.currentTime
+
+
+      // console.info('start:' + this.$refs.musicAudio.buffered.start(0) + ',end:' + this.$refs.musicAudio.buffered.end(0));
     },
     _ended(){
       //自动播放下一首
@@ -81,6 +84,7 @@ export default {
       const {data:lrcurl} = await getLyricAPI(obj.id)
       if(lrcurl.code!=200) return  this.$toast('没有找到歌词')
       obj.lrc = lrcurl.lrc.lyric
+
       Promise.all([songurl,lrcurl]).then(()=>{
         //发送当前点击音乐信息到vux
         this.setNowSong(obj)
@@ -118,7 +122,8 @@ export default {
     },
     audioInfo_NowTime(){
         this.$refs.musicAudio.currentTime=this.audioInfo_NowTime
-    }
+    },
+
   },
 }
 </script>

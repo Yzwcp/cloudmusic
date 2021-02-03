@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import {mapMutations,mapState} from 'vuex'
 import {deepClone} from "@/common/deepClone";
 import {getMusicUrlAPI,getLyricAPI } from "@/network/home";
 // import {deepClone} from "@/common/deepClone";
@@ -32,19 +32,28 @@ name: "SongList",
   data(){
   return{
     nologin:true,
-    songUrl:''
+    songUrl:'',
+    nowtime:null,
+    arr:[],
+    count:0
   }
   },
   created() {
   if (window.localStorage.getItem('token')) this.nologin=false
   },
   methods:{
-  ...mapMutations(['nowMuiscList','setNowSong']),//映射mapMutations
+  ...mapMutations(['setsongTimeArr','setSongLrclist','nowMuiscList','setNowSong','setSongPosition']),//映射mapMutations
     goLogin(){
       this.$router.replace('/login')
     },
     onload(){
       console.log(12)
+    },
+    format(val){
+      const mm=Math.floor(val/60)
+      const m =Math.floor(val/60)<10? "0" + mm : mm
+      return  parseInt(val % 60)<10 ? m+':' + '0' + parseInt(val % 60) :
+          m+':' + parseInt(val % 60)
     },
     async detailBtn(i){
       //修改播放状态为true
@@ -72,13 +81,49 @@ name: "SongList",
 
       })
 
+      //歌词数组
+      var str3 =  obj.lrc.replace(/\[(.+?)\]/g,'')
+      var arr =  str3.split('\n')
+      this.setSongLrclist(arr)
+      this.setSongPosition(0)
+
+
+      console.log(arr )
+      //歌词时间数组
+      arr =[]
+      let dd  =obj.lrc.replace(/[:]/g,'')
+      let str8 = dd.match(/(?<=\[)\S+(?=\])/g)
+      str8.some((item)=>{
+        arr.push(parseInt(item))
+      })
+      this.setsongTimeArr(arr)
+    },
+    sortArray(m,n) {
+      if (m > n) {
+        return 1
+      } else if (m < n) {
+        return -1
+      } else {
+        return 0
     }
+  },
+    isInterger(value){
+      return Math.round(value) ===value
+    },
+    //歌词时间素组
+    lrcTime(){
+
+    }
+  },
+  computed:{
+     ...mapState(['audioInfo_currentTime','songPosition']),
   },
   watch:{
     playlistTracks(){
       //发送当前显示列表所有歌曲
       this.nowMuiscList(this.playlistTracks)
-    }
+    },
+    audioInfo_currentTime(){}
   }
 }
 </script>

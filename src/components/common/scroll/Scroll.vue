@@ -12,7 +12,6 @@ export default {
 //props中所涉及属性的作用自行查看better-scroll文档
   props: {
     data: {
-      type: Array,
       default: null
     }, //传入数据用于及时刷新高度
     probeType: {
@@ -48,7 +47,10 @@ export default {
         return
       }
       this.scroll = new BScroll(this.$refs.wrapper, {
-        probeType: this.robeType,
+        //probeType 为 1 的时候，会非实时（屏幕滑动超过一定时间后）派发scroll 事件；
+        // 当 probeType 为 2 的时候，会在屏幕滑动的过程中实时的派发 scroll 事件；
+        // 当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件。如果没有设置该值，其默认值为 0，即不派发 scroll 事件
+        probeType: this.probeType,
         click: this.click,
         scrollX: this.scrollX,
         bounce:this.bounce,
@@ -62,14 +64,19 @@ export default {
           this.scroll && this.scroll.finishPullUp()
         })
       }
-
+      this.scroll.on('scroll', (position) => {
+        this.scroll && this.$emit("scroll",position);
+      });
 
     },
     //所使用到的函数作用自行查看文档
     refresh() {
       this.scroll && this.scroll.refresh()
     },
-
+    scrollTo() {
+      // 代理better-scroll的scrollTo方法
+      this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
+    },
 
 
   },

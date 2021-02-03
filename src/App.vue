@@ -2,7 +2,7 @@
   <div id="app">
 <!--    <van-button @click="logout">退出</van-button>-->
 <!--    <van-button @click="isLogout">登录状态</van-button>-->
-    <keep-alive exclude="Found">
+    <keep-alive exclude="Found,musicLrc">
       <router-view :key="key"/>
     </keep-alive>
     <music-audio v-show="isshow !=='/musiclrc' "></music-audio>
