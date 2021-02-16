@@ -6,12 +6,12 @@
     </div>
 
   </BlockItem>
-  <scroll class="wipper" :scrollX="true">
+  <scroll class="wipper" :scrollX="true" :eventPassthrough="'vertical'">
     <div class="bottom">
       <div class="cards" v-for="item in rankingList" :key="item.id">
         <div class="cards-top" @click="godetail(item)">{{item.name}}></div>
         <ul class="cards-bottom">
-          <li v-for="(result,index) in item.arr" :key="result.id">
+          <li @click="getDetail(item,index)" v-for="(result,index) in item.arr" :key="result.id">
             <div><img :src="result.picUrl" alt=""></div>
             <div>{{index+1}}</div>
             <div class="name">{{result.name}}- <span class="author">{{result.author}}</span>   </div>
@@ -27,14 +27,17 @@
 <script>
 import BlockItem from "@/components/content/foundBlockItem/BlockItem";
 import scroll from '@/components/common/scroll/Scroll'
+import { getDetailAPI, getLyricAPI, getMusicUrlAPI, SingInfo} from "@/network/home";
+import {deepClone} from "@/common/deepClone";
 
 export default {
 name: "RankingList",
   components:{BlockItem,scroll},
   props:['rankingList','rankingThree'],
   data(){
-  return{
-  }
+    return{
+      playlistTracks:[],
+    }
   },
   created() {
   },
@@ -43,6 +46,68 @@ name: "RankingList",
       this.$router.replace(`singlist/${item.id}`)
     },
 
+    async getDetail(item,i) {
+      this.playlistTracks = []
+     const res =await getDetailAPI(item.id)
+        if (res.data.code !== 200) return this.$toast('获取歌单列表失败')
+
+        // this.detailItem =res.data.playlist
+        // 歌单作者
+        let O = {}
+        O.avatarUrl = res.data.playlist.creator.avatarUrl
+        O.nickname = res.data.playlist.creator.nickname
+        this.singerInfo = O
+        //获取20首并格式化
+        res.data.playlist.tracks.map((item,index)=>{
+          this.playlistTracks.push(new SingInfo(item,index,this.playListId))
+        })
+        this.$store.commit('nowMuiscList', this.playlistTracks)
+
+
+
+      this.$store.commit('setIsplay',true)
+      this.$store.commit('setIsShow',true)
+
+
+      //在vux查找当前点击音乐
+      var obj ={}
+      this.$store.state.nowMusicList.some((item,index)=>{
+        if (index  == i)  {
+          obj =deepClone( item)
+        }
+      })
+      //根据当前音乐 的id查找音乐url
+      const {data:songurl} = await getMusicUrlAPI(obj.id)
+      if(songurl.code!=200) return  this.$toast('没有找到歌曲')
+      obj.url = songurl.data[0].url
+      const {data:lrcurl} = await getLyricAPI(obj.id)
+      if(lrcurl.code!=200) return  this.$toast('没有找到歌词')
+
+
+      //歌词text素组
+      let lrctext =  lrcurl.lrc.lyric.replace(/\[(.+?)\]/g,'')
+      let lrctextarr =  lrctext.split('\n')
+
+
+      //歌词时间数组
+      var arr2 =[]
+      let dd  =lrcurl.lrc.lyric.replace(/[:]/g,'')
+      let str8 = dd.match(/(?<=\[)\S+(?=\])/g)
+      str8.some((item)=>{
+        arr2.push(parseInt(item))
+      })
+
+
+      Promise.all([songurl,lrcurl]).then(()=>{
+        //发送当前点击音乐信息到vux
+        this.$store.commit('setNowSong',obj)
+        //发送歌词素组
+        this.$store.commit('setSongLrclist',lrctextarr)
+        //发送歌词时间素组
+        this.$store.commit('setsongTimeArr',arr2)
+      })
+
+    },
   },
   watch:{
 

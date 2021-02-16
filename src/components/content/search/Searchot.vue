@@ -3,8 +3,9 @@
       <BlockItem>
         <div slot="block-top"> 热搜榜 </div>
       </BlockItem>
+      <loading v-if="isLoading" ></loading>
       <ul>
-        <li v-for="(item,index) in hotLsit" :key="index">
+        <li @click="btn(item.searchWord)" v-for="(item,index) in hotLsit" :key="index">
           <span :class="{isThree:index<3,index:index>=3}" >{{index+1}}</span>
           <div  :class="{isWeigh:index<3,name:true}">{{item.searchWord}}</div>
           <img v-if="item.iconUrl" :src="item.iconUrl" alt="" class="right">
@@ -15,18 +16,22 @@
 </template>
 
 <script>
+import loading  from "@/components/common/loading/loading";
+
 import BlockItem from "@/components/content/foundBlockItem/BlockItem";
 import {getSearchHotAPI} from "@/network/find";
 
 export default {
 name: "Search",
-  components:{BlockItem},
+  components:{BlockItem,loading},
   data(){
   return{
-    hotLsit:[]
+    hotLsit:[],
+    isLoading:false
   }
   },
   created() {
+  this.isLoading = true
     this._getSearchHotAPI()
   },
   mounted() {
@@ -38,9 +43,12 @@ name: "Search",
       getSearchHotAPI().then(res=>{
         if(res.data.code!==200)return  this.$toast('获取失败')
         this.hotLsit = res.data.data
+        this.isLoading=false
       })
     },
-
+    btn(i){
+     this.$store.commit('sethot_search',i)
+    }
 
   }
 }

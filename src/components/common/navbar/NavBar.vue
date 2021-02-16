@@ -27,13 +27,12 @@ export default {
 .right {
     width: 60px;
     height: 44px;
-    display: flex;
-    justify-content: center;
-    align-items: center
+  display: flex;
+   align-items: center;
 }
 .center {
   flex: 1;    height: 44px;
-display: flex;
+  display: flex;
   align-items: center;
 }
 

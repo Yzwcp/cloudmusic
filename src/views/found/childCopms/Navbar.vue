@@ -1,14 +1,13 @@
 <template>
   <div class="Navbar">
     <NavBar>
-      <van-icon slot="left" name="bars" size="25px"/>
+      <van-icon slot="left" name="bars" size="25px" class="m"/>
       <div slot="center" class="center" @click="goSearch" center>
             <div class="center-content">
               <van-icon class="search" name="search" size="13px"></van-icon>
               <span class="search-text">搜索</span>
             </div>
       </div>
-      <van-icon slot="right" name="bars" size="25px"/>
     </NavBar>
   </div>
 </template>
@@ -40,7 +39,9 @@ name: "Navbar",
 }
 .Navbar{
   background: white;
+
 }
+.m{margin-left: 18px}
 .center-content{
   text-align: left;
   display: flex;

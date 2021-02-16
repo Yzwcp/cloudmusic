@@ -5,7 +5,7 @@
         <div slot="left" >推荐歌单</div>
       </div>
       <div slot="block-bottom">
-        <scroll class="swipper" :scrollX='true'>
+        <scroll class="swipper" :scrollX='true' :eventPassthrough="'vertical'">
           <ul class="content">
             <singBlock :recommend="recommend"></singBlock>
           </ul>

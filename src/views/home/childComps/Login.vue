@@ -6,12 +6,12 @@
         <van-icon v-else  class="shotImg" name="manager" color="#F9D8DA" size="50px"/>
       </div>
       <div v-if="!userObj.avatarUrl">
-        <span @click="goLogin">立即登录</span>
+        <span >立即登录</span>
       </div>
       <div  v-else class="logined">
         <p>云里看物</p>
         <span>开通</span>
-        <span><i>Lv{{userObj.vipType}}</i></span>
+        <span>Lv {{level}}</span>
       </div>
       <van-icon name="arrow" size="20px"  class="right-iocn" />
     </div>
@@ -27,12 +27,11 @@ name: "Login",
       default(){
         return{}
       }
-    }
+    },
+    level:null,
   },
   methods:{
-    goLogin(){
-      this.$router.replace('/login')
-    }
+
   }
 }
 </script>

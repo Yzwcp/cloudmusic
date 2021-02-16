@@ -11,8 +11,21 @@ const routes = [
     {path: '/cloudVillage', component:() => import('views/cloudVillage/cloudVillage')},
     {path: '/boke', component:() => import('views/video/boke')},
     {path: '/singlist/:id', component:() => import('components/content/singList/singDetail')},
-    {path: '/musiclrc', component:() => import('components/content/audio/musicLrc')},
-    {path: '/search', component:() => import('components/content/search/SearchIpt')},
+    {path: '/musiclrc',meta:{index:0}, component:() => import('components/content/audio/musicLrc')},
+    {
+        path: '/search',
+        redirect:'/hot',
+        children:[
+            {path:'/hot', component:() => import('components/content/search/Searchot')},
+            {path:'/result', component:() => import('components/content/search/SearchResult'),}
+        ],
+        component:() => import('components/content/search/SearchIpt'),
+
+    },
+    {path: '/day', component:() => import('views/found/childCopms/menuComps/DayRecommend')},
+    {path: '/songlistcomment/:id', component:() => import('components/content/singList/ChildComps/SongListComment')},
+    {path: '/ranking', component:() => import('views/found/childCopms/menuComps/RankingList')},
+    {path: '/allsonglist', component:() => import('views/found/childCopms/menuComps/AllsongList')},
 ]
 
 const router = new VueRouter({

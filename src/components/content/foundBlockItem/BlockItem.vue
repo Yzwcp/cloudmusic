@@ -1,11 +1,26 @@
 <template>
 <div id="blockitem">
   <div class="block-top">
+
+
     <slot name="block-top">
         <slot name="left"></slot>
     </slot>
+
+
+
     <div class="right">更多<van-icon name="arrow" /></div>
+
+
+
+
+
+
   </div>
+
+
+
+
   <div class="block-bottom"><slot name="block-bottom"></slot></div>
   </div>
 </template>

@@ -6,17 +6,20 @@
             v-model="formData.user"
             name="用户名"
             label="用户名"
+            label-width="50px"
             :rules=rules.user
         />
         <van-field
             v-model="formData.password"
             type="password"
             name="密码"
+            label-width="50px"
             label="密码"
             :rules=rules.password
         />
         <div style="margin: 16px;">
-          <van-button plain hairline block type="info" native-type="submit">提交</van-button>
+          <van-button plain hairline block type="info" class="btn" native-type="submit">提交</van-button>
+          <div class="tiyan" plain hairline block type="info" @click="gofound" >立即体验</div>
         </div>
       </van-form>
     </div>
@@ -32,10 +35,10 @@ name: "LoginProfile",
     return{
       // 背景图
       login: {
-        backgroundImage:"url(" + require("assets/img/app.webp")  + ")",
-        backgroundPositionX:"50%",
-        backgroundPositionY:"20%",
-        backgroundSize: 'contain',
+        backgroundImage:"url(" + require("assets/img/app.jpg")  + ")",
+        backgroundPositionX:"",
+        backgroundPositionY:"100%",
+        backgroundSize: '100%',
         backgroundRepeat: 'no-repeat',
       },
       formData:{
@@ -67,6 +70,9 @@ name: "LoginProfile",
         }
       })
     },
+    gofound(){
+      this.$router.push('/found')
+    },
     failed(){
       this.$toast('手机号或密码错误')
     }
@@ -87,11 +93,22 @@ name: "LoginProfile",
   border-radius: 30px;
   margin: 10px 0;
 }
-.van-button--plain{
+.van-button--plain:nth-child(1){
+  background: white;
+  border: 1px seashell solid;
+  color: red;
+  border-radius: 50px;
+  outline: none;
+}
+.tiyan{
   background: rgba(0,0,0,0);
   border: 1px seashell solid;
   color: white;
+  height: 44px  ;
   border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   outline: none;
 }
 .van-hairline--surround::after {
@@ -100,8 +117,7 @@ name: "LoginProfile",
 .van-field__error-message{
   position: absolute;
 }
-.logins{
-  position: relative;
-  top: -44px;
+.btn{
+  margin-bottom:10px ;
 }
 </style>

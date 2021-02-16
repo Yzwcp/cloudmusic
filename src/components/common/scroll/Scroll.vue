@@ -34,6 +34,10 @@ export default {
       type:Boolean,
       default: false
     }, //下拉刷新 default:false
+    eventPassthrough:{
+      type:String,
+      default: ''
+    }
   },
   mounted() {
     setTimeout(() => {
@@ -55,6 +59,8 @@ export default {
         scrollX: this.scrollX,
         bounce:this.bounce,
         pullUpLoad:this.pullUpLoad,
+        eventPassthrough: this.eventPassthrough  //有时候我们使用 better-scroll 在某个方向模拟滚动的时候，希望在另一个方向保留原生的滚动（比如轮播图，我们希望横向模拟横向滚动，而纵向的滚动还是保留原生滚动，我们可以设置 eventPassthrough 为 vertical；相应的，如果我们希望保留横向的原生滚动，可以设置eventPassthrough为 horizontal）。备注：eventPassthrough 的设置会导致其它一些选项配置无效，需要小心使用它。
+
       })
 
       //监听上拉加载更多
@@ -64,6 +70,7 @@ export default {
           this.scroll && this.scroll.finishPullUp()
         })
       }
+      // 监听滚动
       this.scroll.on('scroll', (position) => {
         this.scroll && this.$emit("scroll",position);
       });

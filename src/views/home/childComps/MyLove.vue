@@ -3,7 +3,7 @@
     <div class="bg-card">
       <div class="my-love">
         <div class="cvg"><van-icon color="#FC4032" size="22px" name="like" /></div>
-        <div class="center"><span>我喜欢的音乐</span><p>0首</p></div>
+        <div class="center"><span>我喜欢的音乐</span><p>{{likelength}} <span v-if="!likelength">0</span>首</p></div>
         <div class="lived">
           <div><van-icon class="lived-heart"  size="16px" name="like-o" />心动模式 </div>
         </div>
@@ -14,7 +14,13 @@
 
 <script>
 export default {
-name: "MyLove"
+  props:['likelength'],
+name: "MyLove",
+  created() {
+    },
+  methods:{
+
+  }
 }
 </script>
 

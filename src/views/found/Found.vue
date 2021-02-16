@@ -1,14 +1,18 @@
 <template>
   <div id="profile">
-    <Navbar></Navbar>
-    <Swiper :swiperList="swiperList"></Swiper>
-    <Menu></Menu>
-    <RecommendPlaylist :recommend="recommend"></RecommendPlaylist>
-    <RankingList :rankingList="rankingList" :rankingThree="rankingThree"></RankingList>
+      <Navbar></Navbar>
+      <loading v-if="isLoading"></loading>
+      <Swiper :swiperList="swiperList"></Swiper>
+      <Menu></Menu>
+      <RecommendPlaylist :recommend="recommend"></RecommendPlaylist>
+      <RankingList :rankingList="rankingList" :rankingThree="rankingThree"></RankingList>
+
   </div>
 </template>
 
 <script>
+import loading from "@/components/common/loading/loading";
+
 import Navbar from './childCopms/Navbar'
 import Swiper from './childCopms/Swiper'
 import Menu from "@/views/found/childCopms/Menu";
@@ -19,19 +23,29 @@ import {getDetailAPI,SingInfo} from "@/network/home";
 import {addChineseUnit} from "@/common/filter";
 export default {
   name: "Found",
-  components:{Navbar,Swiper,Menu,RecommendPlaylist,RankingList},
+  components:{Navbar,Swiper,Menu,RecommendPlaylist,RankingList,loading,},
   data(){
     return{
       swiperList:[],//轮播图
       recommend:[],//发现页6个推荐歌单
       rankingList:[],//发现页5个排行榜
       rankingThree:[], //5个歌单的前三首
+      isLoading:false,
+      scrolldata:[],
     }
   },
   created() {
+    this.isLoading=true
     this.getSwiper()    //轮播图数据
     this.getRecommend()    //推荐歌单
     this.getFiveList()//获取发现页的5个歌单
+  },
+  mounted() {
+
+  },
+  beforeUpdate() {
+    this.isLoading=false
+
   },
   methods:{
     //轮播图数据
@@ -58,10 +72,7 @@ export default {
     //获取发现页的5个歌单
     getFiveList(){
 
-
       getAllListAPI().then(res=>{
-        this.$forceUpdate();
-
         if(res.data.code!==200) return this.$toast('获取失败')
         res.data.list.some(item=>{
           if(item.id==19723756 || item.id==2884035 || item.id==3778678 || item.id==3779629 || item.id ==3112516681){
@@ -102,5 +113,8 @@ export default {
 }
 </script>
 <style scoped>
-
+.swipper{
+  height: calc(100vh - 50px);
+  overflow: hidden;
+}
 </style>

@@ -2,10 +2,16 @@
   <div id="app">
 <!--    <van-button @click="logout">退出</van-button>-->
 <!--    <van-button @click="isLogout">登录状态</van-button>-->
-    <keep-alive exclude="Found,musicLrc">
-      <router-view :key="key"/>
-    </keep-alive>
-    <music-audio v-show="isshow !=='/musiclrc' "></music-audio>
+    <transition :name="transitionName">
+        <keep-alive>
+
+          <router-view :key="key"/>
+        </keep-alive>
+
+    </transition>
+<!--    <transition name="v" >-->
+      <music-audio v-show="isshow !== '/musiclrc' && ex !== '/songlistcomment' "></music-audio>
+<!--    </transition >-->
     <nav-bar v-show=" isshow == '/' || isshow == '/found'|| isshow == '/cloudVillage'|| isshow == '/boke'"></nav-bar>
 
 
@@ -19,6 +25,11 @@ import {logoutAPI,isLoginApi} from "@/network/home";
 
 export default {
   components:{NavBar,musicAudio},
+  data(){
+    return{
+      transitionName:''
+    }
+  },
   methods:{
     logout(){
       logoutAPI().then(res=>{
@@ -38,10 +49,50 @@ export default {
     },
     isshow(){
       return this.$route.path
+    },
+    ex(){
+      var str= this.$route.path
+      return  str.slice(0,16)
+    }
+// /songlistcomment
+  },
+  watch:{
+    $route(to){
+      // console.log(to.path)
+      // console.log(from.path)
+      if (to.meta.index==0){
+        this.transitionName  ='slide-left'
+      }else{
+        this.transitionName  =''
+      }
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active {
+  will-change: transform;
+  transition: all 500ms;
+  position: absolute;
+}
+.slide-right-enter {
+  opacity: 0;
+  transform: translate3d(0,-100%, 0);
+}
+.slide-right-leave-active {
+  opacity: 0;
+  transform: translate3d(0,100%, 0);
+}
+.slide-left-enter {
+  opacity: 0;
+  transform: translate3d(100%,0,0);
+}
+.slide-left-leave-active {
+  opacity: 0;
+  transform: translate3d(-100%,0,0);
+}
 </style>

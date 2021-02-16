@@ -70,6 +70,61 @@ export  function getLyricAPI(id){
         params:{id:id}
     })
 }
+//获取用户喜欢的音乐
+export  function getLikeListAPI(id){
+    return request({
+        url:'/likelist',
+        params:{uid:id}
+    })
+}
+//用户等级
+export  function getLevelAPI(id){
+    return request({
+        url:'/user/level',
+        params:{uid:id}
+    })
+}
+//收藏/取消收藏歌单
+export  function getSubscribeAPI(t,id){
+    return request({
+        url:'/playlist/subscribe',
+        params:{id,t}
+    })
+}
+//评论显示
+export  function getCommentAPI(id,type,sortType=1,pageNo=1,pageSize=20,cursor){
+    return request({
+        url:'/comment/new',
+        params:{
+            id,type, pageNo,pageSize,sortType,cursor
+        }
+    })
+}
+//评论
+export  function getCommentUserAPI(t,type,id,content){
+    return request({
+        url:'/comment',
+        params:{
+            t,type,id,content
+        }
+    })
+}
+//历史播放
+export  function getHistory(uid){
+    return request({
+        url:'/user/record',
+        params:{
+            uid,type:0
+        }
+    })
+}
+
+
+
+
+
+
+
 export class SingInfo{
     constructor(singInfo,index,listid) {
         this.index = index
@@ -80,7 +135,33 @@ export class SingInfo{
         this.authorCDs=singInfo.al.name
         this.url=''
         this.picUrl=singInfo.al.picUrl
+        this.show = false
     }
 }
+export class SingCommentInfo{
+    constructor(info,user) {
+        this.commentId =info.commentId
+        this.avatarUrl=user.avatarUrl
+        this.isHug=user.isHug
+        this.nickname = user.nickname
+        this.userId =user.userId
+        this.vipRights=user.vipRights
+        this.time = info.time
+        this.replyCount =info.showFloorComment.replyCount
+        this.likedCount = info.likedCount
+        this.content = info.content
+        this.liked = info.liked
+    }
+}
+export class  RankingListInfo{
+    constructor(info,listThree) {
+        this.coverImgUrl=info.coverImgUrl
+        this.description =info.description
+        this.id =info.id
+        this.name = info.name
+        this.updateFrequency = info.updateFrequency
+        this.tracks = listThree
+    }
 
+}
 

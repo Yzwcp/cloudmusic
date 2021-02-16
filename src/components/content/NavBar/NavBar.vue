@@ -1,10 +1,10 @@
 <template>
   <div class="navbar">
-    <van-tabbar route placeholder  >
-      <van-tabbar-item replace  to="/found" icon="home-o">发现</van-tabbar-item>
-      <van-tabbar-item replace   to="/boke" icon="search">播客</van-tabbar-item>
-      <van-tabbar-item replace   to="/" icon="friends-o">我的</van-tabbar-item>
-      <van-tabbar-item replace   to='/cloudVillage' icon="setting-o">云村</van-tabbar-item>
+    <van-tabbar route placeholder active-color="#FC4032" >
+      <van-tabbar-item replace to="/found" icon="music-o">发现</van-tabbar-item>
+<!--      <van-tabbar-item replace  to="/boke" icon="bulb-o">播客</van-tabbar-item>-->
+      <van-tabbar-item replace  to="/" icon="audio">我的</van-tabbar-item>
+<!--      <van-tabbar-item replace  to='/cloudVillage' icon="friends-o">云村</van-tabbar-item>-->
     </van-tabbar>
   </div>
 </template>

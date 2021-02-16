@@ -41,7 +41,7 @@ export function getSearchSuggestAPI(keywords){
     })
 }
 //搜索
-export function getSearchAPI(keywords,offset,limit,type ){
+export function getSearchAPI(keywords,offset,limit,type=1 ){
     return request({
         url:'/cloudsearch',
         params:{
@@ -50,5 +50,37 @@ export function getSearchAPI(keywords,offset,limit,type ){
             type:type,
             offset:offset
         }
+    })
+}
+//获取每日推荐歌曲
+export function getDayRecommendAPI(){
+    return request({
+        url:'/recommend/songs'
+    })
+}
+//获取排行榜数据
+export function getRankingListAPI(){
+    return request({
+        url:'/toplist/detail'
+    })
+}
+//热门歌单分类
+export function getHotplayListAPI(){
+    return request({
+        url:'/playlist/hot'
+    })
+}
+//获取菜单歌单
+export function getplayLsit(cat,offset,limit=30){
+    return request({
+        url:'/top/playlist',
+        params:{cat,limit,offset}
+    })
+}
+//给评论点赞
+export function getliked(id,cid,t,type){
+    return request({
+        url:'/comment/like',
+        params:{id,cid,t,type}
     })
 }

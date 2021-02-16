@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import {Button,NavBar,Icon,Grid, GridItem,Field,Form,Toast,Sticky,List,Cell,Circle,Slider,Tabbar,TabbarItem,
-CellGroup,Swipe,SwipeItem,Search,Loading } from "vant";
+CellGroup,Swipe,SwipeItem,Search,Loading,Overlay,Popover } from "vant";
 Vue.prototype.$toast = Toast
 Vue.use(Button)
 Vue.use(NavBar)
@@ -22,3 +22,5 @@ Vue.use(Swipe)
 Vue.use(SwipeItem)
 Vue.use(Search)
 Vue.use(Loading)
+Vue.use(Overlay)
+Vue.use(Popover)

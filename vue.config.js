@@ -17,7 +17,7 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://localhost:3000',
+                target: 'http://192.168.1.94:3000',
                 ws: false,
                 changeOrigin:true,//允许跨域
                 pathRewrite: {
@@ -26,6 +26,9 @@ module.exports = {
             }
         },
 
+
     },
+
+
 
 }

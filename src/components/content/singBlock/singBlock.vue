@@ -1,16 +1,25 @@
 <template>
-  <div class="singblock">
+  <div :class="{singblock:true,isthreecolum:isthree}">
     <li v-for="(item,i) in recommend" :key="i">
-      <div  @click="recommendBtn(item)" class="content-img"><img :src="item.picUrl" alt=""><span><van-icon size="10px" name="play" />{{item.playCount}}</span></div>
+      <div  @click="recommendBtn(item)" class="content-img">
+        <img v-if="item.picUrl" :src="item.picUrl" alt="">
+        <img v-if="item.coverImgUrl" :src="item.coverImgUrl" alt="">
+
+        <span>
+          <van-icon size="10px" name="play" />{{item.playCount | wan}}{{item.updateFrequency}}
+        </span>
+      </div>
       <div class="name">{{item.name}}</div>
     </li>
   </div>
 </template>
 
 <script>
+import {addChineseUnit} from "@/common/filter";
+
 export default {
 name: "singBlock",
-  props:['recommend'],
+  props:['recommend','isthree'],
   created() {
 
   },
@@ -18,6 +27,11 @@ name: "singBlock",
     recommendBtn(item){
       this.$router.replace(`singlist/${item.id}`)
     }
+  },
+  filters:{
+      wan(value){
+        return addChineseUnit(value ,0)
+      }
   }
 }
 </script>
@@ -25,15 +39,21 @@ name: "singBlock",
 <style scoped>
 .singblock{
   display: flex;
+  width: 100%;
+}
+.isthreecolum{
 
-
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
 }
 li{
-  width: 110px;
-  height: 160px;
+  width: 32.5%;
+  height: 140px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
   align-items: center;
 }
 img {width: 100px; height: 100px;border-radius:10px }
@@ -55,6 +75,21 @@ img {width: 100px; height: 100px;border-radius:10px }
 }
 
 .content-img span{
+  position: absolute;
+  top: 3px;
+  right: 10px;
+  font-size: 8px;
+  color: white;
+  background: rgba(0,0,0,0.3);
+  border-radius: 12.5px;
+  padding: 0px 5px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px ;
+}
+.phb{
   position: absolute;
   top: 3px;
   right: 10px;

@@ -2,7 +2,7 @@
   <div class="Swiper">
     <van-swipe class="my-swipe" :autoplay="3000" height="131.83px">
       <van-swipe-item v-for="(item,i) in swiperList" :key="i">
-        <img :src="item.pic" alt=""> <div class="custom-indicator" :style="{backgroundColor:item.titleColor}">{{item.typeTitle}}</div>
+        <img :src="item.pic +'?322y125.22'" alt=""> <div class="custom-indicator" :style="{backgroundColor:item.titleColor}">{{item.typeTitle}}</div>
       </van-swipe-item>
     </van-swipe>
 

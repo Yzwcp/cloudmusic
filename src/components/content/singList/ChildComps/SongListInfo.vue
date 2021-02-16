@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="info">
 
     <div class="top"  :style="{backgroundColor:bgStyle}">
       <div class="bg"></div>
@@ -14,8 +14,14 @@
         </div>
       </div>
       <div class="mark">
-        <span ><van-icon class="mark-content" name="passed" size="22px"/>{{singMark.bookedCount   }}</span>
-        <span ><van-icon class="mark-content" name="chat-o" size="22px"/>{{ singMark.commentCount }}</span>
+        <span >
+          <van-icon  @click="subscribe" v-if="isSubscribed" class="mark-content" name="passed" size="22px"/>
+          <van-icon @click="subscribe"  class="mark-content" name="add-o" v-if="!isSubscribed" size="22px"/>
+          {{singMark.bookedCount   }}
+        </span>
+
+
+        <span @click="goComment"> <van-icon   class="mark-content" name="chat-o" size="22px"/>{{ singMark.commentCount }}</span>
         <span ><van-icon class="mark-content" name="share-o" size="22px"/>{{singMark.shareCount   }}</span>
       </div>
     </div>
@@ -25,7 +31,7 @@
 <script>
 // import NavBar from "@/components/common/navbar/NavBar";
 // import scroll from '@/components/common/scroll/Scroll';
-
+import {getSubscribeAPI} from "@/network/home";
 import 'common/rgbaster'
 export default {
   name: "SongListInfo",
@@ -34,18 +40,20 @@ export default {
     playListId:null,
     singMark:{}, //评论收藏转发,
     detailItem:{}, //歌单信息
-    singerInfo:{},//歌手信息
+    singerInfo:{},//歌手信息,
   },
   data(){
     return{
       bgStyle: null,//背景颜色
       clearTiemr:null,//查找到主题色 清除掉interval
-
+      subscribed:{},//收藏
+      isSubscribed:false
     }
   },
   created() {
    this.clearTiemr= this.colorfn()
   },
+
   methods:{
     //返回
     goback() {
@@ -55,27 +63,58 @@ export default {
     //获取背景颜色，因为拾取颜色的插件为异步较慢 用定时器每隔20毫秒获取颜色
     colorfn(){
          const timer = setInterval(() => {
-           console.log("正在允许 ")
            this.bgStyle = window.sessionStorage.getItem('color')
          }, 20)
           return function (){
              clearInterval(timer)
-            console.log('找到了')
           }
+    },
+    async subscribe(){
+      if(!window.localStorage.getItem('token')) return this.$router.replace('/login')
+      let str = ''
+      if(this.detailItem.subscribed){
+        this.subscribed = 2
+        str ='取消收藏'
+      }else{
+        this.subscribed = 1
+        str='收藏成功'
+      }
+     const {data:res}=await getSubscribeAPI(this.subscribed,this.$route.params.id)
+      if (res.code!==200) return  this.$toast('操作失败')
+      this.$toast(str)
+      this.subscribed == 1 ? this.subscribed=2 :this.subscribed =1
+      this.isSubscribed =!this.isSubscribed
+    },
+    goComment(){
+      this.$router.replace(`/songlistcomment/${this.playListId}`)
     }
+  },
+  deactivated() {
+    this.clearTiemr()
+  },
+  updated() {
+    this.isSubscribed = this.detailItem.subscribed
+
   },
   watch:{
     bgStyle(){
-      if(this.bgStyle !==null){this.clearTiemr()}
-    }
+      if(this.bgStyle !==null){
+        this.clearTiemr()
+      }
+    },
+
   }
 }
 </script>
 
 <style scoped>
+.info{
+  padding-bottom: 30px;
+
+}
 .navbar div{
-  position: relative;
-  z-index: 103;
+  /*position: relative;*/
+  /*z-index:10;*/
 }
 .top{
   position: relative;
@@ -92,14 +131,13 @@ export default {
   top: 0;
   height: 200px;
   background-color: rgba(0, 0, 0, 0.3);
-  z-index: 1;
 }
 .top-right p{width: 200px;
 
 }
 .top-left img{
   position: relative;
-  z-index: 9;
+  /*z-index: 9;*/
   width: 130px;
   border-radius:18px ;
   height: 130px;
@@ -121,7 +159,7 @@ export default {
   overflow: hidden;
   font-size: 14px;
   position: relative;
-  z-index: 2;
+  /*z-index: 2;*/
 }
 .singdetail .three{
 }
@@ -136,12 +174,12 @@ p img{
   align-items: center;
   color: white;
   position: relative;
-  z-index: 2;
+  /*z-index: 2;*/
   font-size: 14px;
 }
 .one{
   position: relative;
-  z-index: 9;
+  /*z-index: 9;*/
   font-size: 18px;
   color: white;
   line-height: 24px;
@@ -151,7 +189,7 @@ p img{
 .mark{
   padding: 0 20px;
   background: white;
-  box-shadow: 0.1px 0.5px 0.58px;
+  box-shadow: 0.1px 0.5px 5px #A9A9A9;
   width: 60%;
   position: absolute;
   left: 50%;
@@ -162,11 +200,11 @@ p img{
   width: 240px;
   align-items: center;
   border-radius: 25px;
-  z-index: 9;
+  /*z-index: 9;*/
 }
 .mark span{
   flex:1;
-  font-size: 14px;
+  font-size: 12px;
   text-align: center;
   display: flex;
   align-items: center;
