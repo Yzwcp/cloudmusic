@@ -3,10 +3,8 @@
 <!--    <van-button @click="logout">退出</van-button>-->
 <!--    <van-button @click="isLogout">登录状态</van-button>-->
     <transition :name="transitionName">
-        <keep-alive>
 
           <router-view :key="key"/>
-        </keep-alive>
 
     </transition>
 <!--    <transition name="v" >-->

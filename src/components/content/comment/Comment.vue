@@ -83,6 +83,7 @@ name: "Comment",
 
     async _getCommentAPI(id,type,sortType){
       const {data:res} = await getCommentAPI(id,type,sortType)
+      console.log(res)
       if(res.code!==200)return this.$toast('获取失败')
 
       res.data.comments.some(item=>{
@@ -104,13 +105,13 @@ name: "Comment",
           var liked,toast
          if(item.liked){
           liked =  1
-           toast ='点赞成功,数据2分钟后更新'
+           toast ='点赞成功'
          }else{
            liked = 0
            toast ='取消点赞'
          }
 
-         await getliked(this.id,re.commentId,liked,2)
+         await getliked(this.id,item.commentId,liked,2,window.localStorage.getItem('c'))
 
           this.$toast(toast)
 
@@ -119,9 +120,9 @@ name: "Comment",
       })
       this.$forceUpdate();
     },
+    // 排序
     sortbtn(i){
       this.isShow=true
-
       this.recommentList=[]
       this.crrentindex =i
       this._getCommentAPI(this.id,2,this.sortTypeList[i].sortType)
@@ -130,7 +131,7 @@ name: "Comment",
     async comBtn(){
       if (!window.localStorage.getItem('token')) return this.$router.push('/login')
 
-      const res =await getCommentUserAPI(1,2,this.id,this.value)
+      const res =await getCommentUserAPI(1,2,this.id,this.value,window.localStorage.getItem('c'))
       if(res.data.code!==200) return this.$toast('评论失败')
       this.$toast('评论成功')
       this.value=''

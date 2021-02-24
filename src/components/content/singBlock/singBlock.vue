@@ -2,8 +2,8 @@
   <div :class="{singblock:true,isthreecolum:isthree}">
     <li v-for="(item,i) in recommend" :key="i">
       <div  @click="recommendBtn(item)" class="content-img">
-        <img v-if="item.picUrl" :src="item.picUrl" alt="">
-        <img v-if="item.coverImgUrl" :src="item.coverImgUrl" alt="">
+        <img v-if="item.picUrl" :src="item.picUrl+'?param=100y100'" alt="">
+        <img v-if="item.coverImgUrl" :src="item.coverImgUrl+ '?param=100y100'" alt="">
 
         <span>
           <van-icon size="10px" name="play" />{{item.playCount | wan}}{{item.updateFrequency}}

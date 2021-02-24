@@ -53,10 +53,10 @@
 
             </ul>
           </div>
-          <bangdan ref="jingxuanRef"  class="bangdan" :isthree="true" :name="'精选榜'" :list="jingxuan"></bangdan>
-          <bangdan ref="qufengRef"  class="bangdan" :isthree="true" :name="'曲风榜'" :list="qufeng"></bangdan>
-          <bangdan ref="quanqiuRef" class="bangdan" :isthree="true" :name="'全球榜'" :list="quanqiu"></bangdan>
-          <bangdan ref="teseRef" class="bangdan" :isthree="true" :name="'特色榜'" :list="tese"></bangdan>
+           <lazy-component ref="jingxuanRef"><bangdan ref="jingxuanRef"  class="bangdan" :isthree="true" :name="'精选榜'" :list="jingxuan"></bangdan></lazy-component>
+           <lazy-component ref="qufengRef"  ><bangdan ref="qufengRef"  class="bangdan" :isthree="true" :name="'曲风榜'" :list="qufeng"></bangdan></lazy-component>
+           <lazy-component ref="quanqiuRef" ><bangdan ref="quanqiuRef" class="bangdan" :isthree="true" :name="'全球榜'" :list="quanqiu"></bangdan></lazy-component>
+           <lazy-component ref="teseRef" ><bangdan ref="teseRef" class="bangdan" :isthree="true" :name="'特色榜'" :list="tese"></bangdan></lazy-component>
         </div>
       </scroll>
     </div>
@@ -94,6 +94,8 @@ name: "RankingList",
   },
   mounted() {
 
+  },
+  updated() {
   },
   methods:{
   ...mapMutations(['nowMuiscList','setIsplay','setIsShow','setsongTimeArr','setSongLrclist','setNowSong']),

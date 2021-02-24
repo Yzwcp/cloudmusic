@@ -8,11 +8,11 @@
   </BlockItem>
   <scroll class="wipper" :scrollX="true" :eventPassthrough="'vertical'">
     <div class="bottom">
-      <div class="cards" v-for="item in rankingList" :key="item.id">
-        <div class="cards-top" @click="godetail(item)">{{item.name}}></div>
+      <div class="cards" v-for="(item,index) in rankingList" :key="item.id">
+        <div class="cards-top" @click="godetail(index)">{{name[index].name}}></div>
         <ul class="cards-bottom">
-          <li @click="getDetail(item,index)" v-for="(result,index) in item.arr" :key="result.id">
-            <div><img :src="result.picUrl" alt=""></div>
+          <li @click="getDetail(result,index)" v-for="(result,index) in item" :key="result.id">
+            <div><img :src="result.picUrl + '?param=45y45'" alt=""></div>
             <div>{{index+1}}</div>
             <div class="name">{{result.name}}- <span class="author">{{result.author}}</span>   </div>
           </li>
@@ -37,20 +37,20 @@ name: "RankingList",
   data(){
     return{
       playlistTracks:[],
+      name:[{name:'飙升榜',type:19723756},{name:'原创榜',type:2884035},{name:'热歌榜',type:3778678}],
     }
   },
   created() {
   },
   methods:{
-    godetail(item){
-      this.$router.replace(`singlist/${item.id}`)
+    godetail(index){
+      this.$router.replace(`singlist/${this.name[index].type}`)
     },
 
-    async getDetail(item,i) {
+    async getDetail(items,i) {
       this.playlistTracks = []
-     const res =await getDetailAPI(item.id)
+      const res = await getDetailAPI(items.index)
         if (res.data.code !== 200) return this.$toast('获取歌单列表失败')
-
         // this.detailItem =res.data.playlist
         // 歌单作者
         let O = {}
@@ -123,7 +123,7 @@ name: "RankingList",
   padding: 5px 0px 10px 18px ;
   background: white;
   display: flex;
-  width: 1600px;
+  width: 960px;
 }
 .cards{
   width: 320px;

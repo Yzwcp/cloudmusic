@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import {Button,NavBar,Icon,Grid, GridItem,Field,Form,Toast,Sticky,List,Cell,Circle,Slider,Tabbar,TabbarItem,
-CellGroup,Swipe,SwipeItem,Search,Loading,Overlay,Popover } from "vant";
+CellGroup,Swipe,SwipeItem,Search,Loading,Overlay,Popover ,Lazyload } from "vant";
 Vue.prototype.$toast = Toast
+Vue.use(Lazyload, {
+    lazyComponent: true,
+});
 Vue.use(Button)
 Vue.use(NavBar)
 Vue.use(Icon)

@@ -14,7 +14,7 @@
     <li @click="goLrc">
 
       <div class="hotimg">
-        <img :src="nowSong.picUrl" alt="" v-if="!loading">
+        <img :src="nowSong.picUrl + '?param=50y50'" alt="" v-if="!loading">
         <loading :istext="false" v-if="loading"></loading>
       </div>
 

@@ -69,6 +69,9 @@ export default {
     }
   },
   created() {
+  },
+  mounted() {
+
     // 获取歌单评论分享收藏等数据
     this.getDetailDynamic()
     //歌单上部分文字信息图片信息
@@ -77,24 +80,22 @@ export default {
     this.isLoading = true
     this.clearTiemr= this.colorfn()
   },
-  mounted() {
-
-  },
   beforeUpdate() {
     },
   methods:{
     // 获取歌单评论分享收藏等数据
-    getDetailDynamic() {
-      this.playListId = this.$route.params.id
-      getDetailDynamicAPI(this.playListId).then(res => {
+   async getDetailDynamic() {
+        this.playListId = this.$route.params.id
+        const res=await getDetailDynamicAPI(this.$route.params.id)
         if (res.data.code !== 200) return this.$toast('获取歌单列表失败')
         //格式化数据 添加万单位
-        res.data.bookedCount = addChineseUnit(res.data.bookedCount, 1)
-        res.data.commentCount = addChineseUnit(res.data.commentCount, 1)
-        res.data.shareCount = addChineseUnit(res.data.shareCount, 1)
-        this.singMark = res.data
-      })
-    },
+        let obj ={}
+         obj.bookedCount = addChineseUnit(res.data.bookedCount, 1)
+         obj.commentCount = addChineseUnit(res.data.commentCount, 1)
+         obj.shareCount = addChineseUnit(res.data.shareCount, 1)
+        this.$store.state.singmark = obj
+
+   },
     //获取音乐列表20首
    async getDetail() {
      this.playListId = this.$route.params.id
@@ -174,6 +175,9 @@ export default {
 },
   deactivated() {
     this.$bus.$off('setItem')
+  },
+  beforeDestroy() {
+
     var obj  ={}
     obj.name =this.detailItem.name
     obj.coverImgUrl =this.detailItem.coverImgUrl
@@ -181,6 +185,7 @@ export default {
     this.$bus.$emit('recommentinfo',obj)
   },
   updated() {
+
   },
   computed:{
     ...mapState(['isShow']),

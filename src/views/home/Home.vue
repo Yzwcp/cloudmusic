@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+      <loading v-if="loading"></loading>
       <Login @click.native="gologin" :level="level" :userObj="userObj"></Login>
       <grid></grid>
       <my-love @click.native="godetail" :likelength="likelength" ></my-love>
@@ -13,12 +14,12 @@ import Login from "@/views/home/childComps/Login";
 import Grid from "@/views/home/childComps/Grid";
 import MyLove from "@/views/home/childComps/MyLove";
 import PlayList from "@/views/home/childComps/PlayList";
-
-import {userObjAPI, getPlayListAPI, getLikeListAPI,getLevelAPI} from '@/network/home'
+import loading from "@/components/common/loading/loading";
+import { getPlayListAPI,getLikeListAPI,getLevelAPI } from '@/network/home'
 export default {
   name: 'Home',
   components: {
-    Login, Grid, MyLove, PlayList
+    Login, Grid, MyLove, PlayList,loading
   },
   data() {
     return {
@@ -29,21 +30,32 @@ export default {
       likeListId:null,//喜欢歌单id
       likelength:null ,     //喜欢歌单长度
       level:null, //等级
+      loading:false
     }
   },
+  beforeCreate() {
+    this.loading=true
+    },
   created() {
-     if (window.localStorage.getItem('token')) {
+
+    this.loading=false
+
+
+
+
+
+
+
+
+    if (window.localStorage.getItem('token')) {
+        this.userObj  = JSON.parse(window.localStorage.getItem('token'))
        this.getUserObj()
      }
-
   },
   methods: {
     //获取用户账号信息
     getUserObj() {
-      userObjAPI().then(res=>{
-        if (res.data.code!==200) return this.$toast('获取用户数据失败')
-        this.userObj = res.data.profile
-      }).finally(()=>{
+
         //获取用户收藏专栏
         getPlayListAPI(this.userObj.userId).then(res=>{
           if(res.data.code!==200) return this.$toast('获取收藏列表失败')
@@ -52,19 +64,17 @@ export default {
           res.data.playlist.shift()
           res.data.playlist.shift()
 
-          console.log(res )
-
           this.playList=res.data.playlist
         })
-        //喜欢歌单列表
-        getLikeListAPI(this.userObj.userId).then(res=>{
+        // 喜欢歌单列表
+        getLikeListAPI(this.userObj.userId,window.localStorage.getItem('c')).then(res=>{
           this.likelength = res.data.ids.length
         })
-        //用户等级
-        getLevelAPI().then(res=>{
+        // 用户等级
+        getLevelAPI(window.localStorage.getItem('c')).then(res=>{
+          console.log(window.localStorage.getItem('c'))
          this.level = res.data.data.level
         })
-      })
     },
     godetail(){
       this.$router.replace(`singlist/${this.likeListId}`)

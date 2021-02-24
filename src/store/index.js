@@ -33,8 +33,11 @@ const store = new Vuex.Store({
         loading:false,
 
         //搜索 cats
-        search_cats:1
-   },
+        search_cats:1,
+
+        singmark:{}
+
+    },
     mutations:{
         setsearch_cats(state,p){
             state.search_cats = p
@@ -100,7 +103,8 @@ const store = new Vuex.Store({
                 state.songLoop = pd
             }
 
-        }
+        },
+
 
    },
     getters:{

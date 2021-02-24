@@ -1,8 +1,10 @@
 import {request} from './request'
 export function  getLoginListAPI(phone,password){
+    var timestamp = new Date().getTime();
+
     return request({
         url:'/login/cellphone',
-        params:{phone,password}
+        params:{phone,password,timestamp}
     })
 }
 export function  isLoginApi(){
@@ -16,30 +18,36 @@ export function  logoutAPI(){
     })
 }
 //用户账号信息 头像等
-export function userObjAPI(){
+export function userObjAPI(cookie){
     return request({
-        url:'/user/account'
+        url:'/user/account',
+        cookie:cookie
     })
 }
 //获取用户收藏的歌单
-export  function getPlayListAPI(userId){
+export  function getPlayListAPI(userId,){
+    var timestamp = new Date().getTime();
     return request({
         url:'/user/playlist',
-        params:{uid:userId}
+        params:{uid:userId,timestamp}
     })
 }
 //获取用户歌单详情音乐20首
 export  function getDetailAPI(id){
+    var timestamp = new Date().getTime();
+
     return request({
         url:'/playlist/detail',
-        params:{id:id}
+        params:{id:id,timestamp}
     })
 }
 //获取歌单收藏评论分享的数据
 export  function getDetailDynamicAPI(id){
+    var timestamp = new Date().getTime();
+
     return request({
         url:'/playlist/detail/dynamic',
-        params:{id:id}
+        params:{id:id,timestamp}
     })
 }
 //获取音乐URl
@@ -51,9 +59,11 @@ export  function getMusicUrlAPI(id){
 }
 //获取用户歌单详情音乐全部
 export  function getAllDetailAPI(ids){
+    var timestamp = new Date().getTime();
+
     return request({
         url:'/song/detail',
-        params:{ids:ids}
+        params:{ids:ids,timestamp}
     })
 }
 //判断音乐是否可用
@@ -71,41 +81,52 @@ export  function getLyricAPI(id){
     })
 }
 //获取用户喜欢的音乐
-export  function getLikeListAPI(id){
+export  function getLikeListAPI(id,c){
+    var timestamp = new Date().getTime();
+
     return request({
         url:'/likelist',
-        params:{uid:id}
+        params:{uid:id,timestamp,cookie: c}
     })
 }
 //用户等级
-export  function getLevelAPI(id){
+export  function getLevelAPI(cookie){
+    var timestamp = new Date().getTime();
+
     return request({
         url:'/user/level',
-        params:{uid:id}
+        params:{timestamp,cookie}
     })
 }
 //收藏/取消收藏歌单
-export  function getSubscribeAPI(t,id){
+export  function getSubscribeAPI(t,id,cookie){
+    var timestamp = new Date().getTime();
     return request({
         url:'/playlist/subscribe',
-        params:{id,t}
+        method:'post',
+        params:{id,t,timestamp,cookie}
     })
 }
 //评论显示
 export  function getCommentAPI(id,type,sortType=1,pageNo=1,pageSize=20,cursor){
+    var timestamp = new Date().getTime();
+
     return request({
         url:'/comment/new',
+        method:'post',
         params:{
-            id,type, pageNo,pageSize,sortType,cursor
+            id,type, pageNo,pageSize,sortType,cursor,timestamp
         }
     })
 }
 //评论
-export  function getCommentUserAPI(t,type,id,content){
+export  function getCommentUserAPI(t,type,id,content,c){
+    var timestamp = new Date().getTime();
     return request({
         url:'/comment',
+        method:'post',
         params:{
-            t,type,id,content
+            t,type,id,content,timestamp,cookie:c
         }
     })
 }

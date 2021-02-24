@@ -57,16 +57,18 @@ name: "LoginProfile",
   methods:{
     onSubmit(values) {
       getLoginListAPI(values['用户名'],values['密码']).then(res=> {
-        console.log(res)
+
         if (res.data.code === 502){
           return this.$toast('密码错误')
         } else if(res.data.code === 501){
           return this.$toast('账号错误')
         }else {
           this.profile = res.data
-          window.localStorage.setItem('token',res.data.token)
+          window.localStorage.setItem('token',JSON.stringify(res.data.profile))
+          window.localStorage.setItem('c',JSON.stringify(res.data.cookie))
+          console.log(res)
+
           this.$router.replace('/')
-          this.$bus.$emit('setProfile',res.data)
         }
       })
     },

@@ -5,7 +5,7 @@
       <div class="bg"></div>
       <div class="content"  >
         <div  class="top-left">
-          <img class="img"  :src="detailItem.coverImgUrl" alt="">
+          <img class="img"  :src="detailItem.coverImgUrl +'?param=130y130'" alt="">
         </div>
         <div class="top-right ">
           <div class="one">{{detailItem.name}}</div>
@@ -15,14 +15,14 @@
       </div>
       <div class="mark">
         <span >
-          <van-icon  @click="subscribe" v-if="isSubscribed" class="mark-content" name="passed" size="22px"/>
-          <van-icon @click="subscribe"  class="mark-content" name="add-o" v-if="!isSubscribed" size="22px"/>
-          {{singMark.bookedCount   }}
+          <van-icon  @click="subscribe" v-if="detailItem.subscribed" class="mark-content" name="passed" size="22px"/>
+          <van-icon @click="subscribe"  class="mark-content" name="add-o" v-if="!detailItem.subscribed" size="22px"/>
+          {{detailItem.subscribedCount}}
         </span>
 
 
-        <span @click="goComment"> <van-icon   class="mark-content" name="chat-o" size="22px"/>{{ singMark.commentCount }}</span>
-        <span ><van-icon class="mark-content" name="share-o" size="22px"/>{{singMark.shareCount   }}</span>
+        <span @click="goComment"> <van-icon   class="mark-content" name="chat-o" size="22px"/>{{ detailItem.commentCount}}</span>
+        <span ><van-icon class="mark-content" name="share-o" size="22px"/>{{detailItem.shareCount}}</span>
       </div>
     </div>
   </div>
@@ -31,8 +31,9 @@
 <script>
 // import NavBar from "@/components/common/navbar/NavBar";
 // import scroll from '@/components/common/scroll/Scroll';
-import {getSubscribeAPI} from "@/network/home";
+import { getSubscribeAPI} from "@/network/home";
 import 'common/rgbaster'
+// import {addChineseUit} from "@/common/filter";
 export default {
   name: "SongListInfo",
   components:{},
@@ -47,19 +48,34 @@ export default {
       bgStyle: null,//背景颜色
       clearTiemr:null,//查找到主题色 清除掉interval
       subscribed:{},//收藏
-      isSubscribed:false
+      isSubscribed:false,
+      mark:{}
     }
   },
   created() {
    this.clearTiemr= this.colorfn()
   },
+  mounted() {
 
+  },
   methods:{
     //返回
     goback() {
       this.$router.push('/')
       window.sessionStorage.clear('color')
     },
+    // // 获取歌单评论分享收藏等数据
+    // async getDetailDynamic() {
+    //   const res=await getDetailDynamicAPI(this.$route.params.id)
+    //   if (res.data.code !== 200) return this.$toast('获取歌单列表失败')
+    //   //格式化数据 添加万单位
+    //   let obj ={}
+    //   obj.bookedCount = addChineseUnit(res.data.bookedCount, 1)
+    //   obj.commentCount = addChineseUnit(res.data.commentCount, 1)
+    //   obj.shareCount = addChineseUnit(res.data.shareCount, 1)
+    //   this.mark = obj
+    //
+    // },
     //获取背景颜色，因为拾取颜色的插件为异步较慢 用定时器每隔20毫秒获取颜色
     colorfn(){
          const timer = setInterval(() => {
@@ -79,11 +95,11 @@ export default {
         this.subscribed = 1
         str='收藏成功'
       }
-     const {data:res}=await getSubscribeAPI(this.subscribed,this.$route.params.id)
+      const {data:res}=await getSubscribeAPI(this.subscribed,this.$route.params.id,window.localStorage.getItem('c'))
       if (res.code!==200) return  this.$toast('操作失败')
       this.$toast(str)
-      this.subscribed == 1 ? this.subscribed=2 :this.subscribed =1
-      this.isSubscribed =!this.isSubscribed
+
+      this.detailItem.subscribed =!this.detailItem.subscribed
     },
     goComment(){
       this.$router.replace(`/songlistcomment/${this.playListId}`)

@@ -78,9 +78,11 @@ export function getplayLsit(cat,offset,limit=30){
     })
 }
 //给评论点赞
-export function getliked(id,cid,t,type){
+export function getliked(id,cid,t,type,c){
+    var timestamp = new Date().getTime();
     return request({
         url:'/comment/like',
-        params:{id,cid,t,type}
+        method:'post',
+        params:{id,cid,t,type,cookie:c,timestamp}
     })
 }

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{message}}
+</div>
+</body>
+</html>
+<script>
+    const obj = {
+        message: '哈哈哈',
+        name:'why'
+    }
+    //使用Object.keys(obj)拿到obj所有值
+    Object.keys(obj).forEach(key => {
+        //值
+        let value = obj[key]
+        Object.defineProperty(obj,key,{
+            //监听Key的改变
+            set(newValue){
+                console.log('监听'+key+'改变')
+            },
+            //获取值的监听
+            get(){
+                console.log('获取'+key+'的对应值')
+                return value
+            }
+        })
+    })
+
+    // 发布订阅者
+    class Dep{
+        constructor() {
+            this.subs = [] //存贮订阅者
+        }
+        addSub(wather){
+            this.subs.push(wather)
+        }
+    }
+    class watcher{
+        constructor(name) {
+            this.name =name
+        }
+        update(){
+            console.log(this.name + '发生了update')
+        }
+    }
+</script>
+
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script>
+
+    const app = new Vue({
+        el:'#app',
+        data:{
+            message:"请问",
+        }
+    })
+</script>

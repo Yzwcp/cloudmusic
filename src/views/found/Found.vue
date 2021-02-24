@@ -5,7 +5,9 @@
       <Swiper :swiperList="swiperList"></Swiper>
       <Menu></Menu>
       <RecommendPlaylist :recommend="recommend"></RecommendPlaylist>
+    <lazy-component>
       <RankingList :rankingList="rankingList" :rankingThree="rankingThree"></RankingList>
+    </lazy-component>
 
   </div>
 </template>
@@ -18,7 +20,7 @@ import Swiper from './childCopms/Swiper'
 import Menu from "@/views/found/childCopms/Menu";
 import RecommendPlaylist from "@/views/found/childCopms/RecommendPlaylist";
 import RankingList from "@/views/found/childCopms/RankingList";
-import {getFoundSwiperAPI, getRecommendAPI,getAllListAPI} from "@/network/find";
+import {getFoundSwiperAPI, getRecommendAPI} from "@/network/find";
 import {getDetailAPI,SingInfo} from "@/network/home";
 import {addChineseUnit} from "@/common/filter";
 export default {
@@ -35,13 +37,13 @@ export default {
     }
   },
   created() {
+
+  },
+  mounted() {
     this.isLoading=true
     this.getSwiper()    //轮播图数据
     this.getRecommend()    //推荐歌单
     this.getFiveList()//获取发现页的5个歌单
-  },
-  mounted() {
-
   },
   beforeUpdate() {
     this.isLoading=false
@@ -70,37 +72,44 @@ export default {
       })
     },
     //获取发现页的5个歌单
-    getFiveList(){
+   async getFiveList(){
 
-      getAllListAPI().then(res=>{
-        if(res.data.code!==200) return this.$toast('获取失败')
-        res.data.list.some(item=>{
-          if(item.id==19723756 || item.id==2884035 || item.id==3778678 || item.id==3779629 || item.id ==3112516681){
-            let obj = {}
-            obj.updateFrequency = item.updateFrequency
-            obj.coverImgUrl  = item.coverImgUrl
-            obj.name =item.name
-            obj.id =item.id
-            this.rankingList.push(obj)
-          }
-        })
-      }).finally(()=>{
-        //查询5个歌单前3个
+
+     //查询5个歌单前3个
           //循环查找5个歌单的id
-        this.rankingList.some((item,i)=>{
-          var arr= []
-          getDetailAPI(item.id).then(res=>{
+
+          getDetailAPI(19723756).then(res=>{
+            var arr= []
             //通过id查找5个歌单的前三首
             res.data.playlist.tracks.some((results,index)=>{
               if (index<3){
-                arr.push(new SingInfo(results,item.id))
+                arr.push(new SingInfo(results,19723756))
               }
             })
+          this.rankingList.push(arr)
           })
-          this.$set(this.rankingList[i],'arr', arr)
+         getDetailAPI(2884035).then(res=>{
+           var arr= []
+           //通过id查找5个歌单的前三首
+           res.data.playlist.tracks.some((results,index)=>{
+             if (index<3){
+               arr.push(new SingInfo(results,2884035))
+             }
+           })
+           this.rankingList.push(arr)
 
-        })
-      })
+         })
+         getDetailAPI(3778678).then(res=>{
+           var arr= []
+           //通过id查找5个歌单的前三首
+           res.data.playlist.tracks.some((results,index)=>{
+             if (index<3){
+               arr.push(new SingInfo(results,3778678))
+             }
+           })
+           this.rankingList.push(arr)
+
+         })
 
 
     }
